@@ -3,7 +3,7 @@ package ru.spring.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.spring.model.Product;
-import ru.spring.repisitory.ProductRepository;
+import ru.spring.service.ProductService;
 
 import java.util.List;
 
@@ -11,25 +11,25 @@ import java.util.List;
 @RequestMapping("/product")
 @RequiredArgsConstructor
 public class ProductController {
-    private final ProductRepository productRepository;
+    private final ProductService productService;
 
-    @GetMapping
-    public List<Product> getAllProduct() {
-        return productRepository.findAll();
+    @GetMapping()
+    public List<Product> getAllProduct (@RequestParam(name = "min",required = false) Double minCost, @RequestParam(name = "max",required = false) Double maxCost) {
+        return productService.getAllProduct(minCost, maxCost);
     }
 
     @GetMapping("/{id}")
     public Product getProductById(@PathVariable Long id) {
-        return productRepository.findById(id).get();
+        return productService.getProductById(id);
     }
 
     @PostMapping
-    public Product save(@RequestBody Product product) {
-       return productRepository.save(product);
+    public Product save(Product product) {
+       return productService.save(product);
     }
 
     @GetMapping ("/delete/{id}")
     public void  deleteProductById (@PathVariable Long id) {
-        productRepository.deleteById(id);
+        productService.deleteProductById(id);
     }
 }
